@@ -1,10 +1,10 @@
 
 spring:
   datasource:
-    url: jdbc:mariadb://svc.sel5.cloudtype.app:32002/ofi
+    url: ${mariaDB_URL}
     driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: aksl4224
+    username: ${mariaDB_username}
+    password: ${mariaDB_password}
 
   jpa:
     hibernate:
@@ -16,8 +16,8 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: ofi1234@naver.com
-    password: aksl4224!
+    username: ${naver_username}
+    password: ${naver_password}
     properties:
       debug: false
       mail:
@@ -37,22 +37,22 @@ spring:
       client:
         registration:
           naver:
-            client-id: 9PAoOnLFRBY1wUsb28BA
-            client-secret: 0yX8qGfdOq
+            client-id: ${naver_client_id}
+            client-secret: ${naver_client_secret}
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
             scope: nickname,email,gender,age,profile_image
             client-name: Naver
           kakao:
-            client-id: 7f2ea7190047c3ce9cdd64396511fb06
+            client-id: ${kakao_client_id}
             client-name: kakao
             scope: profile_nickname,account_email
             authorization-grant-type: authorization_code
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
           google:
-            client-id: 913247934733-5ubt084h8ohcpngodtvcmvmu4ucn0rtd.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${google_client_id}
+            client-secret: ${google_secret}
             redirect-uri: http://localhost:3000/oauth/google
             scope: profile,email
         provider:
@@ -68,7 +68,7 @@ spring:
             user-name-attribute: id
 
 jwt:
-  secret: "GDGWHATEVEROFI"
+  secret: ${jwt_secret}
 
 
 logging:

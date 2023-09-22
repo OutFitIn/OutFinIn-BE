@@ -25,11 +25,12 @@ public class MailService {
     private MimeMessage createMessage(String to) throws Exception{
         System.out.println("보내는 대상 : " + to);
         System.out.println("인증 번호 : " + ePw);
-
+        // https://seumu-s3-bucket.s3.ap-northeast-2.amazonaws.com/banner_pattern.svg
+        // https://drive.google.com/uc?export=view&amp;id=1Sq-EX7P31_gwDoSmUh5SJDD-8z1dfhKq
         String msgg =
                 "<div style=\"width: 1280px; overflow: hidden;\">\n" +
                 "   <div style=\"width: 700px;\">\n" +
-                "       <img src=\"https://seumu-s3-bucket.s3.ap-northeast-2.amazonaws.com/banner_pattern.svg\">\n" +
+                "       <img src=\"https://seumu-s3-bucket.s3.ap-northeast-2.amazonaws.com/banner_pattern.svg\"/>\n" +
                 "   </div>\n" +
                 "   <div style=\"margin: 93px 0px 0px 160px; width: 100%;\">\n" +
                 "       <div style=\"color: #000; font-size: 34px; font-weight: 700; line-height: normal; letter-spacing: 0.085px; width: 700px;\">\n" +
@@ -53,8 +54,6 @@ public class MailService {
                 "   Copyright ©OFI Corp. All rights reserved. " +
                 "   </div> " +
                 "</div>";
-
-
 
         MimeMessage message = emailSender.createMimeMessage();
 
