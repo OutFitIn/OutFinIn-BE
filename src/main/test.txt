@@ -1,0 +1,12 @@
+kakao: 3020374389
+naver: cXCF-VNeVgYMFpoLIV6ZGVrKC6yiQlFgie8j8ycQhEo
+google: 109166088432352790062
+
+INSERT INTO coordinator_social_login (coordinator_id, kakaoid, naverid, googleid)
+VALUES
+    (1, null, null, '109166088432352790062'),
+    (2, null, 'cXCF-VNeVgYMFpoLIV6ZGVrKC6yiQlFgie8j8ycQhEo', null);
+
+INSERT INTO user_social_login (user_id, kakaoid, naverid, googleid)
+VALUES
+    (1, 3020374389, null, null);
