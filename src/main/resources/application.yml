@@ -81,5 +81,5 @@ jwt:
   secret: ${jwt_secret}
 
 bootpay:
-  restapikey: ${bootpay.restapikey}
-  privatekey: ${bootpay.privatekey}
+  restapikey: "64ec910100c78a001abf689d"
+  privatekey: "oEP/4NY+MpUakTqjQAUloN3Y7zCobXRk4Dv/nQic4vQ="
