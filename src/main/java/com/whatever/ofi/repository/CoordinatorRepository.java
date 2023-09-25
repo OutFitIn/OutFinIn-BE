@@ -1,9 +1,11 @@
 package com.whatever.ofi.repository;
 
+import com.whatever.ofi.Enum.Gender;
 import com.whatever.ofi.domain.Board;
 import com.whatever.ofi.domain.Coordinator;
 import com.whatever.ofi.domain.User;
 import com.whatever.ofi.responseDto.CoordinatorAllBoardRes;
+import com.whatever.ofi.responseDto.CoordinatorInfoRes;
 import com.whatever.ofi.responseDto.CoordinatorMyPageRes;
 import com.whatever.ofi.responseDto.UserMainPageRes;
 import org.springframework.stereotype.Repository;
@@ -86,5 +88,31 @@ public class CoordinatorRepository {
         }
 
         return response;
+    }
+
+    public CoordinatorInfoRes findInfo(Long id) {
+        Object[] result =  em.createQuery(
+                " select c.nickname, c.sns_url, c.image_url, c.content, c.gender, c.height, c.weight,c.styles " +
+                        " from Coordinator c " +
+                        " where c.id = :id", Object[].class)
+                .setParameter("id", id)
+                .getSingleResult();
+
+        return CoordinatorInfoRes.builder()
+                .nickname((String) result[0])
+                .sns_url((String) result[1])
+                .image_url((String) result[2])
+                .content((String) result[3])
+                .gender((Gender) result[4])
+                .height((Integer) result[5])
+                .weight((Integer) result[6])
+                .styles((List<String>) result[7])
+                .build();
+    }
+
+    public Coordinator findByNickName(String nickname){
+        return em.createQuery(" select c from Coordinator c where c.nickname = :nickname ", Coordinator.class)
+                .setParameter("nickname", nickname)
+                .getSingleResult();
     }
 }

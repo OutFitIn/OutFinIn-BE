@@ -7,6 +7,7 @@ import com.whatever.ofi.domain.User;
 import com.whatever.ofi.requestDto.*;
 import com.whatever.ofi.repository.CoordinatorRepository;
 import com.whatever.ofi.responseDto.CoordinatorAllBoardRes;
+import com.whatever.ofi.responseDto.CoordinatorInfoRes;
 import com.whatever.ofi.responseDto.CoordinatorMainPageRes;
 import com.whatever.ofi.responseDto.CoordinatorMyPageRes;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class  CoordinatorService {
     }
 
     public String login(LoginRequest loginRequest) {
-
+        String type = "cordinator";
         // 1. Id가 틀린 경우
         if(coordinatorRepository.findByEmail(loginRequest.getEmail()).isEmpty()) return "Email Not Found";
 
@@ -55,7 +56,9 @@ public class  CoordinatorService {
 
         String nickname = coordinator.getNickname();
 
-        return Util.createJwt(nickname, secretKey);
+        Long id = coordinator.getId();
+
+        return Util.createJwt(type, id, nickname, secretKey);
     }
 
     // 코디 네이터 마이 페이지
@@ -65,6 +68,14 @@ public class  CoordinatorService {
 
     public List<CoordinatorAllBoardRes> findAllBoard(Long id) {
         return coordinatorRepository.findAllBoard(id);
+    }
+
+    public CoordinatorInfoRes findInfo(Long id) {
+        return coordinatorRepository.findInfo(id);
+    }
+
+    public String findNicknameById(Long id) {
+        return coordinatorRepository.findOne(id).getNickname();
     }
 
     @Transactional

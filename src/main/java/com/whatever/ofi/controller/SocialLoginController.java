@@ -1,67 +1,95 @@
 package com.whatever.ofi.controller;
 
-import com.whatever.ofi.requestDto.BoardRequest;
+import com.whatever.ofi.config.Util;
 import com.whatever.ofi.service.SocialLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/social")
+@RequestMapping("/oauth/register")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class SocialLoginController {
 
     private final SocialLoginService socialLoginService;
+    private final Util util;
 
     // 게시물 저장
     @PostMapping("/kakao")
-    public String RegisterKakao(@RequestBody String code, HttpSession session) {
-        /*Long id = (Long) session.getAttribute("id");
-        String type = session.getAttribute("type").toString();*/
+    public String RegisterKakao(@RequestBody String code, @RequestHeader("Authorization") String token) {
 
-        Long id = 1L;
-        String type = "user";
+        String temp = code.substring(0, code.length() - 1);
+        System.out.println("code: " + temp);
 
-        String kakaoId = socialLoginService.getRegisterKakaoId(code);
+        String secretKey = "GDGWHATEVEROFI";
+        Long id = util.getUserId(token, secretKey);
+        String type = util.getType(token, secretKey);
+
+        if(id == null || type == null || token == null) {
+            return "false";
+        }
+
+        String kakaoId = socialLoginService.getRegisterKakaoId(temp);
 
         socialLoginService.saveKakao(id, type, kakaoId);
 
-        return "success";
+        return id.toString() + " " + type;
     }
 
     @PostMapping("/naver")
-    public String RegisterNaver(@RequestBody String code, HttpSession session) {
-        /*Long id = (Long) session.getAttribute("id");
-        String type = session.getAttribute("type").toString();*/
+    public String RegisterNaver(@RequestBody String code, @RequestHeader("Authorization") String token) {
+        System.out.println("Naver Token:" + token);
+
         String temp = code.substring(0, code.length() - 1);
         System.out.println("code: " + temp);
 
-        Long id = 2L;
-        String type = "coordinator";
+        Long id = util.getUserId(token, "GDGWHATEVEROFI");
+        String type = util.getType(token, "GDGWHATEVEROFI");
 
-        String naverId = socialLoginService.getRegisterNaverId(temp);
+        if(id == null || type == null || token == null) {
+            return "false";
+        }
 
-        socialLoginService.saveNaver(id, type, naverId);
+        System.out.println(id + " " + type);
 
-        return "success";
+        String NaverId = socialLoginService.getRegisterNaverId(temp);
+
+        socialLoginService.saveNaver(id, type, NaverId);
+
+        return id.toString() + " " + type;
     }
 
     @PostMapping("/google")
-    public String RegisterGoogle(@RequestBody String code, HttpSession session) {
-        /*Long id = (Long) session.getAttribute("id");
-        String type = session.getAttribute("type").toString();*/
+    public String RegisterGoogle(@RequestBody String code, @RequestHeader("Authorization") String token) {
+        System.out.println("Google Token:" + token);
+
         String temp = code.substring(0, code.length() - 1);
         System.out.println("code: " + temp);
 
-        Long id = 1L;
-        String type = "coordinator";
+        Long id = util.getUserId(token, "GDGWHATEVEROFI");
+        String type = util.getType(token, "GDGWHATEVEROFI");
 
-        String googleId = socialLoginService.getRegisterGoogleId(temp);
+        if(id == null || type == null || token == null) {
+            return "false";
+        }
 
-        socialLoginService.saveGoogle(id, type, googleId);
+        System.out.println(id + " " + type);
 
-        return "success";
+        String GoogleId = socialLoginService.getRegisterGoogleId(temp);
+
+        socialLoginService.saveNaver(id, type, GoogleId);
+
+        return id.toString() + " " + type;
+    }
+
+    @PostMapping("/testgoogle")
+    public String testGoogle(@RequestBody String code) {
+        System.out.println("Google code:" + code);
+
+        String temp = code.substring(0, code.length() - 1);
+
+        String GoogleId = socialLoginService.getGoogleId(temp);
+
+        return GoogleId;
     }
 }

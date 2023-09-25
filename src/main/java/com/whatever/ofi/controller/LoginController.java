@@ -17,15 +17,15 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/login")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class LoginController {
     private final UserService userService;
     private final CoordinatorService coordinatorService;
     private final SocialLoginService socialLoginService;
 
-    @PostMapping("") // 여기서 사용자, 코디네이터 id 값 넘기기
+    @PostMapping("/login") // 여기서 사용자, 코디네이터 id 값 넘기기
     public String login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+
         String token = userService.login(loginRequest);
         String type;
         Long id;
@@ -61,130 +61,7 @@ public class LoginController {
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         response.addCookie(cookie);
 
-        return "success";
-    }
-
-    @PostMapping("/kakao")
-    public String KakaoLogin (@RequestBody String code ,HttpSession session) {
-        System.out.println(code);
-
-        if (code == null) return "fail";
-
-        String kakaoId = socialLoginService.getKakaoId(code);
-        Map<Long, String> data = socialLoginService.socialLogin("Kakao", kakaoId);
-
-        if (data.isEmpty()) return "fail";
-
-        Optional<Map.Entry<Long, String>> firstEntry = data.entrySet().stream().findFirst();
-
-        if (firstEntry.isPresent()) {
-            Map.Entry<Long, String> entry = firstEntry.get();
-            Long key = entry.getKey();
-            String value = entry.getValue();
-
-            String token = socialLoginService.login(key, value);
-
-            Cookie cookie = new Cookie("token", token);
-
-            cookie.setPath("/");
-            cookie.setSecure(false);
-            cookie.setMaxAge(86400); // 1일
-            cookie.setHttpOnly(false);
-
-            System.out.println(cookie.getValue());
-
-            session.setAttribute("id", key);
-            session.setAttribute("type", value);
-
-            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-            response.addCookie(cookie);
-        }
-
-        return "success";
-    }
-
-    @PostMapping("/naver")
-    public String NaverLogin (@RequestBody String code, HttpSession session) {
-        String temp = code.substring(0, code.length() - 1);
-        System.out.println("code: " + temp);
-
-        if (code == null) return "fail";
-
-        String naverId = socialLoginService.getNaverId(temp);
-        Map<Long, String> data = socialLoginService.socialLogin("Naver", naverId);
-
-        if (data.isEmpty() || data == null) return "fail";
-
-        if (data.isEmpty()) return "fail";
-
-        Optional<Map.Entry<Long, String>> firstEntry = data.entrySet().stream().findFirst();
-
-        if (firstEntry.isPresent()) {
-            Map.Entry<Long, String> entry = firstEntry.get();
-            Long key = entry.getKey();
-            String value = entry.getValue();
-
-            String token = socialLoginService.login(key, value);
-
-            Cookie cookie = new Cookie("token", token);
-
-            cookie.setPath("/");
-            cookie.setSecure(false);
-            cookie.setMaxAge(86400); // 1일
-            cookie.setHttpOnly(false);
-
-            System.out.println(cookie.getValue());
-
-            session.setAttribute("id", key);
-            session.setAttribute("type", value);
-
-            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-            response.addCookie(cookie);
-        }
-
-        return data.toString();
-    }
-
-    @PostMapping("/google")
-    public String GoogleLogin (@RequestBody String code, HttpSession session) {
-        String temp = code.substring(0, code.length() - 1);
-        System.out.println("code: " + temp);
-
-        if (code == null) return "fail";
-
-        String googleId = socialLoginService.getGoogleId(temp);
-        Map<Long, String> data = socialLoginService.socialLogin("Google", googleId);
-
-        if (data.isEmpty()) return "fail";
-
-        if (data.isEmpty()) return "fail";
-
-        Optional<Map.Entry<Long, String>> firstEntry = data.entrySet().stream().findFirst();
-
-        if (firstEntry.isPresent()) {
-            Map.Entry<Long, String> entry = firstEntry.get();
-            Long key = entry.getKey();
-            String value = entry.getValue();
-
-            String token = socialLoginService.login(key, value);
-
-            Cookie cookie = new Cookie("token", token);
-
-            cookie.setPath("/");
-            cookie.setSecure(false);
-            cookie.setMaxAge(86400); // 1일
-            cookie.setHttpOnly(false);
-
-            System.out.println(cookie.getValue());
-
-            session.setAttribute("id", key);
-            session.setAttribute("type", value);
-
-            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-            response.addCookie(cookie);
-        }
-
-        return data.toString();
+        return type;
     }
 
     @GetMapping("/test")
@@ -192,5 +69,131 @@ public class LoginController {
 
         String res = Long.toString((Long) session.getAttribute("id"));
         return res + ((String) session.getAttribute("type"));
+    }
+
+   @PostMapping("/kakao")
+    public String KakaoLogin (@RequestBody String code ,HttpSession session) {
+        if (code == null) return "false";
+
+        String kakaoId = socialLoginService.getKakaoId(code);
+        Map<Long, String> data = socialLoginService.socialLogin("Kakao", kakaoId);
+
+        if (data.isEmpty() || data == null) return "false";
+
+        Optional<Map.Entry<Long, String>> firstEntry = data.entrySet().stream().findFirst();
+
+        String Type = "";
+        if (firstEntry.isPresent()) {
+            Map.Entry<Long, String> entry = firstEntry.get();
+            Long id = entry.getKey();
+            String type = entry.getValue();
+            System.out.println(id + " " + type);
+            Type = type;
+
+            String token = socialLoginService.login(id, type);
+
+            Cookie cookie = new Cookie("token", token);
+
+            cookie.setPath("/");
+            cookie.setSecure(false);
+            cookie.setMaxAge(86400); // 1일
+            cookie.setHttpOnly(false);
+
+            System.out.println(cookie.getValue());
+
+            session.setAttribute("id", id);
+            session.setAttribute("type", type);
+
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            response.addCookie(cookie);
+        }
+
+        return Type;
+    }
+
+    @PostMapping("/naver")
+    public String NaverLogin (@RequestBody String code, HttpSession session) {
+        String temp = code.substring(0, code.length() - 1);
+        System.out.println("code: " + temp);
+
+        if (code == null) return "false";
+
+        String naverId = socialLoginService.getNaverId(temp);
+        Map<Long, String> data = socialLoginService.socialLogin("Naver", naverId);
+
+        if (data.isEmpty() || data == null) return "false";
+
+        Optional<Map.Entry<Long, String>> firstEntry = data.entrySet().stream().findFirst();
+
+        String Type = "";
+        if (firstEntry.isPresent()) {
+            Map.Entry<Long, String> entry = firstEntry.get();
+            Long id = entry.getKey();
+            String type = entry.getValue();
+            System.out.println(id + " " + type);
+            Type = type;
+
+            String token = socialLoginService.login(id, type);
+
+            Cookie cookie = new Cookie("token", token);
+
+            cookie.setPath("/");
+            cookie.setSecure(false);
+            cookie.setMaxAge(86400); // 1일
+            cookie.setHttpOnly(false);
+
+            System.out.println(cookie.getValue());
+
+            session.setAttribute("id", id);
+            session.setAttribute("type", type);
+
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            response.addCookie(cookie);
+        }
+
+        return Type;
+    }
+
+    @PostMapping("/google")
+    public String GoogleLogin (@RequestBody String code, HttpSession session) {
+        String temp = code.substring(0, code.length() - 1);
+        System.out.println("code: " + temp);
+
+        if (code == null) return "false";
+
+        String googleId = socialLoginService.getGoogleId(temp);
+        Map<Long, String> data = socialLoginService.socialLogin("Google", googleId);
+
+        if (data.isEmpty() || data == null) return "false";
+
+        Optional<Map.Entry<Long, String>> firstEntry = data.entrySet().stream().findFirst();
+
+        String Type = "";
+        if (firstEntry.isPresent()) {
+            Map.Entry<Long, String> entry = firstEntry.get();
+            Long id = entry.getKey();
+            String type = entry.getValue();
+            System.out.println(id + " " + type);
+            Type = type;
+
+            String token = socialLoginService.login(id, type);
+
+            Cookie cookie = new Cookie("token", token);
+
+            cookie.setPath("/");
+            cookie.setSecure(false);
+            cookie.setMaxAge(86400); // 1일
+            cookie.setHttpOnly(false);
+
+            System.out.println(cookie.getValue());
+
+            session.setAttribute("id", id);
+            session.setAttribute("type", type);
+
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            response.addCookie(cookie);
+        }
+
+        return Type;
     }
 }

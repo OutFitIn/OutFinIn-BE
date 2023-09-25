@@ -3,6 +3,7 @@ package com.whatever.ofi.service;
 import com.whatever.ofi.repository.CoordinatorRepository;
 import com.whatever.ofi.repository.SearchRepository;
 import com.whatever.ofi.repository.UserRepository;
+import com.whatever.ofi.requestDto.SearchMainPageRes;
 import com.whatever.ofi.requestDto.SearchRequest;
 import com.whatever.ofi.responseDto.CoordinatorWithBoard;
 import com.whatever.ofi.responseDto.CoordinatorWithSearch;
@@ -20,7 +21,7 @@ public class SearchService {
 
     private final SearchRepository searchRepository;
 
-    public List<UserMainPageRes> searchUser() {
+    public List<SearchMainPageRes> searchUser() {
         return searchRepository.findByStyles();
     }
 

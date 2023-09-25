@@ -11,6 +11,8 @@ import com.whatever.ofi.requestDto.UserProfileRequest;
 import com.whatever.ofi.requestDto.UserStyleRequest;
 import com.whatever.ofi.repository.UserRepository;
 import com.whatever.ofi.responseDto.UserBoardLikeRes;
+import com.whatever.ofi.responseDto.UserInfoRes;
+import com.whatever.ofi.responseDto.UserLikeTotalRes;
 import com.whatever.ofi.responseDto.UserMyPageRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,7 @@ public class UserService {
     }
 
     public String login(LoginRequest loginRequest) {
+        String type = "user";
 
         // 1. Id가 틀린 경우
         if(userRepository.findByEmail(loginRequest.getEmail()).isEmpty()) return "Email Not Found";
@@ -53,7 +56,9 @@ public class UserService {
 
         String nickname = user.getNickname();
 
-        return Util.createJwt(nickname, secretKey);
+        Long id = user.getId();
+
+        return Util.createJwt(type, id, nickname, secretKey);
     }
 
     public Long findId(String email) {
@@ -64,8 +69,16 @@ public class UserService {
         return userRepository.findMyPage(id);
     }
 
-    public List<UserBoardLikeRes> findBoardLike(Long id) {
+    public UserLikeTotalRes findBoardLike(Long id) {
         return boardRepository.findBoardLike(id);
+    }
+
+    public UserInfoRes findInfo(Long id) {
+        return userRepository.findInfo(id);
+    }
+
+    public List<Long> findBoardLikeById(Long id) {
+        return userRepository.findBoardLikeById(id);
     }
 
     @Transactional

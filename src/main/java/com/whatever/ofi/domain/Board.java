@@ -60,7 +60,6 @@ public class Board {
 
     public void addBoardLike(BoardLike boardLike) {
         this.boardLikes.add(boardLike);
-        boardLike.setBoard(this);
     }
 
     //==비지니스 로직==//

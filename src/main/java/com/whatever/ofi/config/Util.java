@@ -10,16 +10,21 @@ import java.util.Date;
 @Component
 public class Util {
 
+
+    public static String getType(String token, String secretKey){
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody().get("type", String.class);
+    }
+
     public static long getUserId(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().get("userid", Long.class);
+                .getBody().get("id", Long.class);
     }
 
     public static String getNickname(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().get("nickname", String.class);
     }
-
 
 
     public static boolean isExpired(String token, String secretKey) {
@@ -30,8 +35,10 @@ public class Util {
 
     private static final long expireMs = 86400000; // 토큰 만료 시간 (하루)
 
-    public static String createJwt(String nickname, String secretKey) {
+    public static String createJwt(String type, Long id, String nickname, String secretKey) {
         Claims claims = Jwts.claims();
+        claims.put("type", type);
+        claims.put("id", id);
         claims.put("nickname", nickname);
 
         return Jwts.builder()

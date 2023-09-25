@@ -5,11 +5,13 @@ import com.whatever.ofi.domain.Coordinator;
 import com.whatever.ofi.repository.CoordinatorRepository;
 import com.whatever.ofi.responseDto.CoordinatorMainPageRes;
 import com.whatever.ofi.responseDto.UserMainPageRes;
+import com.whatever.ofi.responseDto.UserMainTotalRes;
 import com.whatever.ofi.service.CoordinatorService;
 import com.whatever.ofi.service.MainPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -24,8 +26,8 @@ public class MainPageController {
 
     // 사용자의 메인 페이지 반환
     @GetMapping("/user")
-    public List<UserMainPageRes> showUserMainPage() {
-        return mainPageService.searchUserMainPage();
+    public UserMainTotalRes showUserMainPage(HttpSession session) {
+        return mainPageService.searchUserMainPage((Long) session.getAttribute("id"));
     }
 
     // 코디네이터의 메인 페이지 반환
@@ -34,8 +36,4 @@ public class MainPageController {
         return mainPageService.searchCoordinatorMainPage();
     }
 
-    @GetMapping("test2")
-    public Coordinator test2(@RequestParam Long id) {
-        return coordinatorService.findOne(id);
-    }
 }

@@ -9,6 +9,8 @@ import java.util.List;
 @Setter
 public class CoordinatorWithBoard {
 
+    private Long coorid;
+
     private String coornickname;
 
     private String coorimageUrl;
@@ -16,6 +18,8 @@ public class CoordinatorWithBoard {
     private int coorrequestCount;
 
     private List<String> coorstyles;
+
+    private Long boardid;
 
     private String boardseason;
 

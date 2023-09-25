@@ -2,6 +2,7 @@ package com.whatever.ofi.OAuth2;
 
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Slf4j
 @Service
 public class KakaoService {
-
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String ClientId;
 

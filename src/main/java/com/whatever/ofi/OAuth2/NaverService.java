@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
+
 @Slf4j
 @Service
 public class NaverService {
-
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String ClientId;
 

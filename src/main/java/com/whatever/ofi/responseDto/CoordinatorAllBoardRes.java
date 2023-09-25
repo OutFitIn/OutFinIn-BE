@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CoordinatorAllBoardRes {
-    Long board_id;
+    private Long board_id;
 
-    String title;
+    private String title;
 
-    String image_url;
+    private String image_url;
 }

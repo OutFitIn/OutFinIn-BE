@@ -2,6 +2,7 @@ package com.whatever.ofi.OAuth2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class GoogleService {
-
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String GOOGLE_CLIENT_ID;
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")

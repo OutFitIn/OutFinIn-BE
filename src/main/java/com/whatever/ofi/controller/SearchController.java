@@ -2,6 +2,7 @@ package com.whatever.ofi.controller;
 
 
 import com.whatever.ofi.config.Util;
+import com.whatever.ofi.requestDto.SearchMainPageRes;
 import com.whatever.ofi.requestDto.SearchRequest;
 import com.whatever.ofi.responseDto.CoordinatorWithBoard;
 import com.whatever.ofi.responseDto.CoordinatorWithSearch;
@@ -24,7 +25,7 @@ public class SearchController {
 
     private final Util util;
     @GetMapping("/main")
-    public List<UserMainPageRes> getStyle(){
+    public List<SearchMainPageRes> getStyle(){
         return searchService.searchUser();
     }
 

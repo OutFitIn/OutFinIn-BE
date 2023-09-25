@@ -1,74 +1,61 @@
 package com.whatever.ofi.repository;
 
 import com.whatever.ofi.domain.ChatRoom;
+import com.whatever.ofi.domain.Coordinator;
+import com.whatever.ofi.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
+@Transactional
+@Repository
 public class ChatRoomRepository {
-    // Redis CacheKeys
-    private static final String CHAT_ROOMS = "CHAT_ROOM"; // 채팅룸 저장
-    public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
-    public static final String ENTER_INFO = "ENTER_INFO"; // 채팅룸에 입장한 클라이언트의 sessionId와 채팅룸 id를 맵핑한 정보 저장
+    @PersistenceContext
+    EntityManager em;
 
-    @Resource(name = "redisTemplate")
-    private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
-    @Resource(name = "redisTemplate")
-    private HashOperations<String, String, String> hashOpsEnterInfo;
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, String> valueOps;
-
-    // 모든 채팅방 조회
-    public List<ChatRoom> findAllRoom() {
-        return hashOpsChatRoom.values(CHAT_ROOMS);
+    public void save(ChatRoom chatRoom){
+        //이거 ChatRoom도 Entity로 만들어서 저장해야됨.
+        em.persist(chatRoom);
     }
 
-    // 특정 채팅방 조회
-    public ChatRoom findRoomById(String id) {
-        return hashOpsChatRoom.get(CHAT_ROOMS, id);
+    public ChatRoom findChatRoomByRoomId(String roomId){
+        return em.createQuery(" select c from ChatRoom c where c.roomId = :roomId ", ChatRoom.class)
+                .setParameter("roomId", roomId)
+                .getSingleResult();
     }
 
-    // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
-    public ChatRoom createChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
-        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
-        return chatRoom;
+    public ChatRoom findChatRoomByUsers(User fiter, Coordinator outer) {
+        List<ChatRoom> resultList = em.createQuery("SELECT c FROM ChatRoom c WHERE c.fiter = :fiter AND c.outer = :outer", ChatRoom.class)
+                .setParameter("fiter", fiter)
+                .setParameter("outer", outer)
+                .getResultList();
+
+        return resultList.isEmpty() ? null : resultList.get(0);
     }
 
-    // 유저가 입장한 채팅방ID와 유저 세션ID 맵핑 정보 저장
-    public void setUserEnterInfo(String mynickname, String roomId) {
-        hashOpsEnterInfo.put(ENTER_INFO, mynickname, roomId);
+    public List<ChatRoom> findChatRoomsByUser(User user) {
+        return em.createQuery("SELECT c FROM ChatRoom c WHERE c.fiter = :user", ChatRoom.class)
+                .setParameter("user", user)
+                .getResultList();
     }
 
-    // 유저 세션으로 입장해 있는 채팅방 ID 조회
-    public String getUserEnterRoomId(String mynickname) {
-        return hashOpsEnterInfo.get(ENTER_INFO, mynickname);
+    public List<ChatRoom> findChatRoomsByCoordinator(Coordinator user) {
+        return em.createQuery("SELECT c FROM ChatRoom c WHERE c.outer = :user", ChatRoom.class)
+                .setParameter("user", user)
+                .getResultList();
     }
 
-    // 유저 세션정보와 맵핑된 채팅방ID 삭제
-    public void removeUserEnterInfo(String mynickname) {
-        hashOpsEnterInfo.delete(ENTER_INFO, mynickname);
-    }
-
-    // 채팅방 유저수 조회
-    public long getUserCount(String roomId) {
-        return Long.valueOf(Optional.ofNullable(valueOps.get(USER_COUNT + "_" + roomId)).orElse("0"));
-    }
-
-    // 채팅방에 입장한 유저수 +1
-    public long plusUserCount(String roomId) {
-        return Optional.ofNullable(valueOps.increment(USER_COUNT + "_" + roomId)).orElse(0L);
-    }
-
-    // 채팅방에 입장한 유저수 -1
-    public long minusUserCount(String roomId) {
-        return Optional.ofNullable(valueOps.decrement(USER_COUNT + "_" + roomId)).filter(count -> count > 0).orElse(0L);
+    public List<ChatRoom> findAllRooms(){
+        return em.createQuery("select c FROM ChatRoom c", ChatRoom.class)
+                .getResultList();
     }
 }

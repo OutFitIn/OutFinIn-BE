@@ -6,6 +6,8 @@ import com.whatever.ofi.domain.User;
 import com.whatever.ofi.repository.BoardLikeRepository;
 import com.whatever.ofi.requestDto.*;
 import com.whatever.ofi.responseDto.UserBoardLikeRes;
+import com.whatever.ofi.responseDto.UserInfoRes;
+import com.whatever.ofi.responseDto.UserLikeTotalRes;
 import com.whatever.ofi.responseDto.UserMyPageRes;
 import com.whatever.ofi.service.BoardLikeService;
 import com.whatever.ofi.service.BoardService;
@@ -54,7 +56,7 @@ public class UserController {
         return "success";
     }
 
-    @PostMapping("styles")
+    @PostMapping("/styles")
     public String addStyle(@RequestBody UserStyleRequest dto, HttpSession session) {
         User user = User.builder()
                 .email((String) session.getAttribute("email"))
@@ -89,8 +91,13 @@ public class UserController {
     }
 
     @GetMapping("/board/like")
-    public List<UserBoardLikeRes> showLikeBoard(HttpSession session) {
+    public UserLikeTotalRes showLikeBoard(HttpSession session) {
         return userService.findBoardLike((Long) session.getAttribute("id"));
+    }
+
+    @GetMapping("/info")
+    public UserInfoRes showInfo(HttpSession session) {
+        return userService.findInfo((Long) session.getAttribute("id"));
     }
 
     @PostMapping("/edit")

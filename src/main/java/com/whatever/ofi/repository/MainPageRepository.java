@@ -2,6 +2,7 @@ package com.whatever.ofi.repository;
 
 import com.whatever.ofi.responseDto.CoordinatorMainPageRes;
 import com.whatever.ofi.responseDto.UserMainPageRes;
+import com.whatever.ofi.responseDto.UserMainTotalRes;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -40,7 +41,7 @@ public class MainPageRepository {
         return dtos;
     }
 
-    public List<UserMainPageRes> findUserMainPage() {
+    public UserMainTotalRes findUserMainPage(Long id) {
         List<Object[]> resultList = em.createQuery(
                         " select c.nickname, c.image_url, b.image_url, c.total_like, c.request_count, c.styles, b.id, c.id" +
                                 " from Board b, Coordinator c " +
@@ -48,6 +49,18 @@ public class MainPageRepository {
                                 " order by c.request_count desc " , Object[].class)
                 .setMaxResults(20)
                 .getResultList();
+
+        List<Long> likes = em.createQuery(
+                "select b.board.id from BoardLike b " +
+                        "where b.user.id = :id ", Long.class)
+                .setParameter("id", id)
+                .getResultList();
+
+        Object styles = em.createQuery(
+                "select u.styles from User u " +
+                        "where u.id = :id ", Object.class)
+                .setParameter("id", id)
+                .getSingleResult();
 
         List<UserMainPageRes> dtos = new ArrayList<>();
 
@@ -65,6 +78,10 @@ public class MainPageRepository {
             dtos.add(dto);
         }
 
-        return dtos;
+        return UserMainTotalRes.builder()
+                .pages(dtos)
+                .styles((List<String>) styles)
+                .user_board_like(likes)
+                .build();
     }
 }

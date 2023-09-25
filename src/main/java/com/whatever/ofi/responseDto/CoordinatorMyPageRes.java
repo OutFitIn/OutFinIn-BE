@@ -17,7 +17,6 @@ public class CoordinatorMyPageRes {
 
     private String content;
 
-
     private int height;
 
     private int weight;

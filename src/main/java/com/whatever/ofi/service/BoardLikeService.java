@@ -28,13 +28,14 @@ public class BoardLikeService {
         board.addLike(); // 게시물 좋아요 증가, 게시물을 작성한 아우터의 전체 좋아요 증가
 
         BoardLike boardLike = new BoardLike(user, board);
-
+        user.addBoardLike(boardLike);
+        board.addBoardLike(boardLike);
         boardLikeRepository.save(boardLike);
     }
 
     @Transactional
     public String decreaseLike(Long userId, Long boardId) {
-        User user = userRepository.findOne(userId);
+        //User user = userRepository.findOne(userId);
         Board board = boardRepository.findOne(boardId);
 
         // 게시물 좋아요 증가, 게시물을 작성한 아우터의 전체 좋아요 증가
@@ -47,4 +48,6 @@ public class BoardLikeService {
             return "impossible";
         }
     }
+
+
 }

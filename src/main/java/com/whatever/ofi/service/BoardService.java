@@ -24,12 +24,12 @@ public class BoardService {
     private final CoordinatorRepository coordinatorRepository;
 
     @Transactional
-    public void join(BoardRequest dto, Long coordinatorId) {
+    public Long join(BoardRequest dto, Long coordinatorId) {
         Board board = dto.toEntity();
         Coordinator coordinator = coordinatorRepository.findOne(coordinatorId);
 
         coordinator.addBoard(board);
-        boardRepository.save(board);
+        return boardRepository.save(board);
     }
 
     @Transactional

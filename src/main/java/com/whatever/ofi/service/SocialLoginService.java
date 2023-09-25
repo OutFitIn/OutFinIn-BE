@@ -1,5 +1,6 @@
 package com.whatever.ofi.service;
 
+
 import com.whatever.ofi.OAuth2.GoogleService;
 import com.whatever.ofi.OAuth2.KakaoService;
 import com.whatever.ofi.OAuth2.NaverService;
@@ -16,13 +17,13 @@ import com.whatever.ofi.repository.CoordinatorSocialLoginRepository;
 import com.whatever.ofi.repository.UserRepository;
 import com.whatever.ofi.repository.UserSocialLoginRepository;
 import com.whatever.ofi.requestDto.CoordinatorSocialRequest;
-import com.whatever.ofi.requestDto.LoginRequest;
 import com.whatever.ofi.requestDto.UserSocialRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -126,31 +127,53 @@ public class SocialLoginService {
     public String login(Long id, String type) {
         String nickname = "";
         if (type.equals("coordinator")) {
-           nickname = userRepository.findOne(id).getNickname();
+           nickname = coordinatorRepository.findOne(id).getNickname();
         } else if (type.equals("user")) {
-            nickname = coordinatorRepository.findOne(id).getNickname();
+            nickname = userRepository.findOne(id).getNickname();
         }
 
-        return Util.createJwt(nickname, secretKey);
+        return Util.createJwt(type, id, nickname, secretKey);
     }
 
 
 
     public boolean saveKakao(Long id, String type, String kakaoId) {
         if(type.equals("coordinator")) {
+            // 유저 or 코디네이터 아이디를 찾고....
             Coordinator coordinator = coordinatorRepository.findOne(id);
-            CoordinatorSocialRequest co = new CoordinatorSocialRequest();
-            co.setCoordinator(coordinator);
-            co.setKakaoid(kakaoId);
-            coordinatorSocialLoginRepository.save(co.toEntity());
+            List<CoordinatorSocialLogin> so = coordinatorSocialLoginRepository.findOneByCoordinatorid(coordinator);
+
+            if (so.isEmpty()) {
+                CoordinatorSocialRequest co = new CoordinatorSocialRequest();
+                co.setCoordinator(coordinator);
+                co.setKakaoid(kakaoId);
+                coordinatorSocialLoginRepository.save(co.toEntity());
+            } else {
+                so.get(0).setKakaoid(kakaoId);
+                coordinatorSocialLoginRepository.insertKakaoid(kakaoId, coordinator);
+            }
 
             return true;
         } else if (type.equals("user")) {
             User user = userRepository.findOne(id);
-            UserSocialRequest userSocialRequest = new UserSocialRequest();
-            userSocialRequest.setUser(user);
-            userSocialRequest.setKakaoid(kakaoId);
-            userSocialLoginRepository.save(userSocialRequest.toEntity());
+            List<UserSocialLogin> so = userSocialLoginRepository.findOneByUserid(user);
+
+            for (UserSocialLogin socialLogin : so) {
+                System.out.println(socialLogin); // 또는 socialLogin의 필드를 출력
+            }
+
+            System.out.println("카카오)리스트 개수: " + so.size());
+
+            if (so.size() == 0) {
+                UserSocialRequest userSocialRequest = new UserSocialRequest();
+                userSocialRequest.setUser(user);
+                userSocialRequest.setKakaoid(kakaoId);
+                userSocialLoginRepository.save(userSocialRequest.toEntity());
+            } else {
+                so.get(0).setKakaoid(kakaoId);
+                userSocialLoginRepository.insertKakaoid(kakaoId, user);
+            }
+
             return true;
         }
 
@@ -159,19 +182,40 @@ public class SocialLoginService {
 
     public boolean saveNaver(Long id, String type, String naverId) {
         if(type.equals("coordinator")) {
+            // 유저 or 코디네이터 아이디를 찾고....
             Coordinator coordinator = coordinatorRepository.findOne(id);
-            CoordinatorSocialRequest co = new CoordinatorSocialRequest();
-            co.setCoordinator(coordinator);
-            co.setNaverid(naverId);
-            coordinatorSocialLoginRepository.save(co.toEntity());
+            List<CoordinatorSocialLogin> so = coordinatorSocialLoginRepository.findOneByCoordinatorid(coordinator);
+
+            if (so.isEmpty()) {
+                CoordinatorSocialRequest co = new CoordinatorSocialRequest();
+                co.setCoordinator(coordinator);
+                co.setNaverid(naverId);
+                coordinatorSocialLoginRepository.save(co.toEntity());
+            } else {
+                so.get(0).setNaverid(naverId);
+                coordinatorSocialLoginRepository.insertNaverid(naverId, coordinator);
+            }
 
             return true;
         } else if (type.equals("user")) {
             User user = userRepository.findOne(id);
-            UserSocialRequest userSocialRequest = new UserSocialRequest();
-            userSocialRequest.setUser(user);
-            userSocialRequest.setNaverid(naverId);
-            userSocialLoginRepository.save(userSocialRequest.toEntity());
+            List<UserSocialLogin> so = userSocialLoginRepository.findOneByUserid(user);
+
+            for (UserSocialLogin socialLogin : so) {
+                System.out.println(socialLogin); // 또는 socialLogin의 필드를 출력
+            }
+
+            System.out.println("네이버)리스트 개수: " + so.size());
+
+            if (so.isEmpty()) {
+                UserSocialRequest userSocialRequest = new UserSocialRequest();
+                userSocialRequest.setUser(user);
+                userSocialRequest.setNaverid(naverId);
+                userSocialLoginRepository.save(userSocialRequest.toEntity());
+            } else {
+                so.get(0).setNaverid(naverId);
+                userSocialLoginRepository.insertNaverid(naverId, user);
+            }
 
             return true;
         }
@@ -181,22 +225,38 @@ public class SocialLoginService {
 
     public boolean saveGoogle(Long id, String type, String googleId) {
         if(type.equals("coordinator")) {
+            // 유저 or 코디네이터 아이디를 찾고....
             Coordinator coordinator = coordinatorRepository.findOne(id);
-            CoordinatorSocialRequest co = new CoordinatorSocialRequest();
-            co.setCoordinator(coordinator);
-            co.setGoogleid(googleId);
-            coordinatorSocialLoginRepository.save(co.toEntity());
+            List<CoordinatorSocialLogin> so = coordinatorSocialLoginRepository.findOneByCoordinatorid(coordinator);
+
+            if (so.isEmpty()) {
+                CoordinatorSocialRequest co = new CoordinatorSocialRequest();
+                co.setCoordinator(coordinator);
+                co.setGoogleid(googleId);
+                coordinatorSocialLoginRepository.save(co.toEntity());
+            } else {
+                so.get(0).setGoogleid(googleId);
+                coordinatorSocialLoginRepository.insertGoogleid(googleId, coordinator);
+            }
 
             return true;
         } else if (type.equals("user")) {
             User user = userRepository.findOne(id);
-            UserSocialRequest userSocialRequest = new UserSocialRequest();
-            userSocialRequest.setUser(user);
-            userSocialRequest.setGoogleid(googleId);
-            userSocialLoginRepository.save(userSocialRequest.toEntity());
+            List<UserSocialLogin> so = userSocialLoginRepository.findOneByUserid(user);
+
+            if (so.isEmpty()) {
+                UserSocialRequest userSocialRequest = new UserSocialRequest();
+                userSocialRequest.setUser(user);
+                userSocialRequest.setGoogleid(googleId);
+                userSocialLoginRepository.save(userSocialRequest.toEntity());
+            } else {
+                so.get(0).setGoogleid(googleId);
+                userSocialLoginRepository.insertGoogleid(googleId, user);
+            }
 
             return true;
         }
+
 
         return false;
     }

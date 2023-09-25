@@ -2,11 +2,9 @@ package com.whatever.ofi.repository;
 
 import com.whatever.ofi.domain.Board;
 import com.whatever.ofi.domain.Coordinator;
+import com.whatever.ofi.requestDto.SearchMainPageRes;
 import com.whatever.ofi.requestDto.SearchRequest;
-import com.whatever.ofi.responseDto.BoardInfo;
-import com.whatever.ofi.responseDto.CoordinatorWithBoard;
-import com.whatever.ofi.responseDto.CoordinatorWithSearch;
-import com.whatever.ofi.responseDto.UserMainPageRes;
+import com.whatever.ofi.responseDto.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,9 +21,9 @@ public class SearchRepository {
     @PersistenceContext
     EntityManager em;
 
-    public List<UserMainPageRes> findByStyles(){
+    public List<SearchMainPageRes> findByStyles(){
         List<Object[]> resultList = em.createQuery(
-                        " select c.nickname, c.image_url, b.image_url, c.total_like, c.request_count, c.styles " +
+                        " select b.id, c.id ,c.nickname, c.image_url, b.image_url, c.total_like, c.request_count, c.styles " +
                                 " from Board b, Coordinator c " +
                                 " where b.coordinator.id = c.id " +
                                 " group by c.id " +
@@ -33,17 +31,19 @@ public class SearchRepository {
                 .setMaxResults(20)
                 .getResultList();
 
-        List<UserMainPageRes> dtos = new ArrayList<>();
+        List<SearchMainPageRes> dtos = new ArrayList<>();
 
         for (Object[] result : resultList) {
-            UserMainPageRes dto = new UserMainPageRes();
+            SearchMainPageRes dto = new SearchMainPageRes();
 
-            dto.setNickname((String) result[0]);
-            dto.setProfile_image((String) result[1]);
-            dto.setBoard_image((String) result[2]);
-            dto.setTotal_like((Integer) result[3]);
-            dto.setRequest_count((Integer) result[4]);
-            dto.setStyles((List<String>) result[5]);
+            dto.setBoard_id((Long) result[0]);
+            dto.setCoordinator_id((Long) result[1]);
+            dto.setNickname((String) result[2]);
+            dto.setProfile_image((String) result[3]);
+            dto.setBoard_image((String) result[4]);
+            dto.setTotal_like((Integer) result[5]);
+            dto.setRequest_count((Integer) result[6]);
+            dto.setStyles((List<String>) result[7]);
             dtos.add(dto);
         }
 
@@ -82,10 +82,12 @@ public class SearchRepository {
         }
 
         query.multiselect(
+                coordinatorRoot.get("id").alias("coorid"),
                 coordinatorRoot.get("nickname").alias("coornickname"),
                 coordinatorRoot.get("image_url").alias("coorimageUrl"),
                 coordinatorRoot.get("request_count").alias("coorrequestCount"),
                 coordinatorRoot.get("styles").alias("coorstyles"),
+                boardJoin.get("id").alias("boardid"),
                 boardJoin.get("season").alias("boardseason"),
                 boardJoin.get("situation").alias("boardsituation"),
                 boardJoin.get("image_url").alias("boardImage"),
@@ -109,6 +111,8 @@ public class SearchRepository {
             dto.setBoardlikeCount(tuple.get("boardlikeCount", Integer.class));
             dto.setCoorimageUrl(tuple.get("coorimageUrl", String.class));
             dto.setCoorrequestCount(tuple.get("coorrequestCount", Integer.class));
+            dto.setCoorid(tuple.get("coorid", Long.class));
+            dto.setBoardid(tuple.get("boardid", Long.class));
 
             // 처리할 데이터 형식에 따라 다르게 설정
             dto.setBoardseason(tuple.get("boardseason", String.class));
@@ -140,7 +144,7 @@ public class SearchRepository {
 
         for (Object[] coordinatorResult : coordinatorResults) {
             CoordinatorWithSearch coordinatorDto = new CoordinatorWithSearch();
-
+            coordinatorDto.setCoorId((Long) coordinatorResult[0]);
             coordinatorDto.setCoornickname((String) coordinatorResult[1]);
             coordinatorDto.setCoorimageUrl((String) coordinatorResult[2]);
             coordinatorDto.setCoorTotalLike((Integer) coordinatorResult[3]);
@@ -149,7 +153,7 @@ public class SearchRepository {
 
             // Coordinator에 해당하는 Board 정보를 가져옴
             List<Object[]> boardResults = em.createQuery(
-                            "SELECT b.image_url, b.like_count, b.content " +
+                            "SELECT b.id, b.image_url, b.like_count, b.content " +
                                     "FROM Board b " +
                                     "WHERE b.coordinator.id = :coordinatorId", Object[].class)
                     .setParameter("coordinatorId", (Long) coordinatorResult[0])
@@ -158,9 +162,10 @@ public class SearchRepository {
             List<BoardInfo> boardInfos = new ArrayList<>();
             for (Object[] boardResult : boardResults) {
                 BoardInfo boardInfo = new BoardInfo();
-                boardInfo.setBoardImage((String) boardResult[0]);
-                boardInfo.setBoardlikeCount((Integer) boardResult[1]);
-                boardInfo.setBoardcontent((String) boardResult[2]);
+                boardInfo.setBoardId((Long) boardResult[0]);
+                boardInfo.setBoardImage((String) boardResult[1]);
+                boardInfo.setBoardlikeCount((Integer) boardResult[2]);
+                boardInfo.setBoardcontent((String) boardResult[3]);
                 boardInfos.add(boardInfo);
             }
 
@@ -184,7 +189,7 @@ public class SearchRepository {
 
         for (Object[] coordinatorResult : coordinatorResults) {
             CoordinatorWithSearch coordinatorDto = new CoordinatorWithSearch();
-
+            coordinatorDto.setCoorId((Long) coordinatorResult[0]);
             coordinatorDto.setCoornickname((String) coordinatorResult[1]);
             coordinatorDto.setCoorimageUrl((String) coordinatorResult[2]);
             coordinatorDto.setCoorTotalLike((Integer) coordinatorResult[3]);

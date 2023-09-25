@@ -47,7 +47,6 @@ public class User {
 
     public void addBoardLike(BoardLike boardLike) {
         this.boardLikes.add(boardLike);
-        boardLike.setUser(this);
     }
 
     public void edit(UserEditRequest dto) {

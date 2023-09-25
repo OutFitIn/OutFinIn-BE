@@ -7,6 +7,9 @@ import java.util.List;
 
 @Getter @Setter
 public class CoordinatorWithSearch {
+
+    private Long coorId;
+
     private String coornickname;
 
     private String coorimageUrl;

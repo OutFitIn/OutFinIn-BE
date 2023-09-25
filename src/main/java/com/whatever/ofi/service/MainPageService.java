@@ -5,6 +5,7 @@ import com.whatever.ofi.repository.CoordinatorRepository;
 import com.whatever.ofi.repository.MainPageRepository;
 import com.whatever.ofi.responseDto.CoordinatorMainPageRes;
 import com.whatever.ofi.responseDto.UserMainPageRes;
+import com.whatever.ofi.responseDto.UserMainTotalRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,8 @@ public class MainPageService {
 
     private final MainPageRepository mainPageRepository;
 
-    public List<UserMainPageRes> searchUserMainPage() {
-        return mainPageRepository.findUserMainPage();
+    public UserMainTotalRes searchUserMainPage(Long id) {
+        return mainPageRepository.findUserMainPage(id);
     }
 
     public List<CoordinatorMainPageRes> searchCoordinatorMainPage() {

@@ -15,11 +15,15 @@ public class CoordinatorDetailRes {
 
     private String content;
 
+    private String sns_url;
+
     private int total_like;
 
     private int request_count;
 
     private List<String> styles;
+
+    private List<Long> user_board_id;
 
     List<CoordinatorAllBoardRes> boards = new ArrayList<>();
 }

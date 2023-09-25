@@ -6,11 +6,13 @@ import com.whatever.ofi.requestDto.*;
 import com.whatever.ofi.responseDto.*;
 import com.whatever.ofi.service.BoardService;
 import com.whatever.ofi.service.CoordinatorService;
+import com.whatever.ofi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,8 @@ import java.util.List;
 public class CoordinatorController {
 
     private final CoordinatorService coordinatorService;
+
+    private final UserService userService;
 
     private final BoardService boardService;
 
@@ -72,11 +76,17 @@ public class CoordinatorController {
     }
 
     @GetMapping("/page")//코디네이터 눌렀을 때 상세 정보 페이지 정보들
-    public CoordinatorDetailRes showCoordinator(HttpSession session) {
+    public CoordinatorDetailRes showCoordinator(@RequestParam Long id, HttpSession session) {
         CoordinatorDetailRes coordinatorDetailRes = new CoordinatorDetailRes();
 
-        CoordinatorMyPageRes coordinatorMyPageRes = coordinatorService.findMyPage((Long) session.getAttribute("id"));
-        List<CoordinatorAllBoardRes> boards = coordinatorService.findAllBoard((Long) session.getAttribute("id"));
+        CoordinatorMyPageRes coordinatorMyPageRes = coordinatorService.findMyPage(id);
+        List<CoordinatorAllBoardRes> boards = coordinatorService.findAllBoard(id);
+
+        List<Long> like_board_id = new ArrayList<>();
+
+        if(session.getAttribute("type") == "user") {
+            like_board_id.addAll(userService.findBoardLikeById((Long) session.getAttribute("id")));
+        }
 
         coordinatorDetailRes.setNickname(coordinatorMyPageRes.getNickname());
         coordinatorDetailRes.setProfile_image(coordinatorMyPageRes.getImage_url());
@@ -84,6 +94,8 @@ public class CoordinatorController {
         coordinatorDetailRes.setStyles(coordinatorMyPageRes.getStyles());
         coordinatorDetailRes.setRequest_count(coordinatorMyPageRes.getRequest_count());
         coordinatorDetailRes.setTotal_like(coordinatorMyPageRes.getTotal_like());
+        coordinatorDetailRes.setUser_board_id(like_board_id);
+        coordinatorDetailRes.setSns_url(coordinatorMyPageRes.getSns_url());
         coordinatorDetailRes.setBoards(boards);
 
         return coordinatorDetailRes;
@@ -94,16 +106,24 @@ public class CoordinatorController {
         return coordinatorService.findMyPage((Long) session.getAttribute("id"));
     }
 
-
     @GetMapping("/board/all")
     public List<CoordinatorAllBoardRes> allBoard(HttpSession session) {
 
         return coordinatorService.findAllBoard((Long) session.getAttribute("id"));
     }
 
+    @GetMapping("/info")
+    public CoordinatorInfoRes showInfo(HttpSession session) {
+        return coordinatorService.findInfo((Long) session.getAttribute("id"));
+    }
+
     @PostMapping("/edit")
     public String editProfile(@RequestBody CoordinatorEditRequest dto, HttpSession session) {
-
         return coordinatorService.editProfile(dto, (Long) session.getAttribute("id"));
+    }
+
+    @GetMapping("/nickname")
+    public String nickname(HttpSession session) {
+        return coordinatorService.findNicknameById((Long) session.getAttribute("id"));
     }
 }

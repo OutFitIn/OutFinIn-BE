@@ -3,41 +3,88 @@ package com.whatever.ofi.controller;
 import com.whatever.ofi.config.Util;
 import com.whatever.ofi.domain.ChatRoom;
 import com.whatever.ofi.repository.ChatRoomRepository;
+import com.whatever.ofi.responseDto.ChatRoomListRes;
+import com.whatever.ofi.responseDto.MessagesResponse;
+import com.whatever.ofi.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/chat")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ChatRoomController {
-
     @Value("${jwt.secret}")
     private String secretKey;
+    private final ChatService chatService;
+    private final Util util;
 
-    private final ChatRoomRepository chatRoomRepository;
-
-    @GetMapping("/rooms")
-    @ResponseBody
-    public List<ChatRoom> room() {
-        List<ChatRoom> chatRooms = chatRoomRepository.findAllRoom();
-        chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRepository.getUserCount(room.getRoomId())));
-        return chatRooms;
+    //방만들기
+    @GetMapping("/room") // 원래 POST 였음 물어보기
+    public String createRoom(@RequestParam("coordinatorNickname") String yournickname, @CookieValue("token") String token) {
+        String mynickName = util.getNickname(token, secretKey);
+        System.out.print(mynickName);
+        return chatService.createChatRoom(mynickName, yournickname);
     }
 
-    @PostMapping("/room")
-    @ResponseBody
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatRoomRepository.createChatRoom(name);
+    //읽음 처리 기능
+    @GetMapping("/readChat")
+    public void readMessage(Long chatid){
+        chatService.readChat(chatid);
     }
 
-    @GetMapping("/room/{roomId}")
-    @ResponseBody
-    public ChatRoom roomInfo(@PathVariable String roomId) {
-        return chatRoomRepository.findRoomById(roomId);
+    //message가져오기
+    @GetMapping("/messages")
+    public MessagesResponse getMessages(@CookieValue("token") String token,
+                                        @RequestParam("roomId") String roomid,
+                                        @RequestParam("nickname") String yournickname,
+                                        HttpSession session){
+
+        String myNickname = util.getNickname(token, secretKey);
+
+        if(session.getAttribute("type") == "user") {
+            return chatService.getMessages(myNickname, roomid, yournickname);
+        }else {
+            return chatService.getMessages(yournickname, roomid, myNickname);
+        }
+    }
+
+    // 현재 사용자의 전체 채팅룸 반환
+    @GetMapping("/main")
+    public List<ChatRoomListRes> getChatRooms(@CookieValue("token") String token){
+        String myNickname = util.getNickname(token, secretKey);
+        List<ChatRoom> chatRooms = chatService.getChatingRooms(myNickname);
+
+        List<ChatRoomListRes> response = new ArrayList<>();
+
+        for(ChatRoom room : chatRooms) {
+            ChatRoomListRes res = ChatRoomListRes.builder()
+                    .room_id(room.getRoomId())
+                    .coordinator(room.getOuter())
+                    .user(room.getFiter())
+                    .history(room.getHistories())
+                    .build();
+
+            response.add(res);
+        }
+
+        return response;
+    }
+
+    @GetMapping("/all")
+    public List<ChatRoom> getAllRooms(){
+        return chatService.getAllRooms();
+    }
+
+    @GetMapping("/find")
+    public ChatRoom findRoom(String UUID){
+        return chatService.findRoom(UUID);
     }
 }

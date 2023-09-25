@@ -23,6 +23,8 @@ public class BoardLike {
     private User user;
 
     public BoardLike(User user, Board board) {
+        this.setUser(user);
+        this.setBoard(board);
         user.addBoardLike(this);
         board.addBoardLike(this);
     }

@@ -19,10 +19,11 @@ public class BoardController {
 
     // 게시물 저장
     @PostMapping("/create")
-    public String createBoard(@RequestBody BoardRequest dto, HttpSession session) {
-        boardService.join(dto, (Long) session.getAttribute("id"));
-        return "success";
+    public Long createBoard(@RequestBody BoardRequest dto, HttpSession session) {
+        return boardService.join(dto, (Long) session.getAttribute("id"));
     }
+
+
 
     @PostMapping("/image")
     public String addImage(@RequestBody BoardImageRequest dto) {
