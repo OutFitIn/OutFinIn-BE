@@ -55,10 +55,10 @@ public class LoginController {
         cookie.setSecure(false);
         cookie.setMaxAge(86400); // 1일
         cookie.setHttpOnly(false);
-        cookie.setDomain(".sel5.cloudtype.app");
+        cookie.setDomain(".cloudtype.app");
 
         Cookie sessionId = new Cookie("JSESSIONID", session.getId());
-        sessionId.setDomain(".sel5.cloudtype.app");
+        sessionId.setDomain(".cloudtype.app");
         sessionId.setPath("/");
         sessionId.setSecure(false);
         sessionId.setMaxAge(86400); // 1일
