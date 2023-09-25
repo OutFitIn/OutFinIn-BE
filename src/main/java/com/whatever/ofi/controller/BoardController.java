@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-@CrossOrigin(origins = "https://web-outfinin-fe-iciy2almolkc88.sel5.cloudtype.app/", allowCredentials = "true")
+@CrossOrigin(origins = "https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", allowCredentials = "true")
 public class BoardController {
 
     private final BoardService boardService;

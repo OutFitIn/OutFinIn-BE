@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@CrossOrigin(origins = "https://web-outfinin-fe-iciy2almolkc88.sel5.cloudtype.app/", allowCredentials = "true")
+@CrossOrigin(origins = "https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
