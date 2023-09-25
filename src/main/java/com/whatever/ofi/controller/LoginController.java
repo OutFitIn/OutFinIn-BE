@@ -55,6 +55,14 @@ public class LoginController {
         cookie.setSecure(false);
         cookie.setMaxAge(86400); // 1일
         cookie.setHttpOnly(false);
+        cookie.setDomain(".sel5.cloudtype.app");
+
+        Cookie sessionId = new Cookie("JSESSIONID", session.getId());
+        sessionId.setDomain(".sel5.cloudtype.app");
+        sessionId.setPath("/");
+        sessionId.setSecure(false);
+        sessionId.setMaxAge(86400); // 1일
+        sessionId.setHttpOnly(false);
 
         System.out.println(cookie.getValue());
 
@@ -63,6 +71,7 @@ public class LoginController {
 
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         response.addCookie(cookie);
+        response.addCookie(sessionId);
 
         return type;
     }
