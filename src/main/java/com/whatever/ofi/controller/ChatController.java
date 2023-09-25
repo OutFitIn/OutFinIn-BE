@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@CrossOrigin(origins = "https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", allowCredentials = "true")
+@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://1.233.127.245/"}, allowCredentials = "true")
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
