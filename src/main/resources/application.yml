@@ -78,8 +78,8 @@ decorator:
       enable-logging: true
 
 jwt:
-  secret: "GDGWHATEVEROFI"
+  secret: ${jwt_secret}
 
 bootpay:
-  restapikey: "64ec910100c78a001abf689d"
-  privatekey: "oEP/4NY+MpUakTqjQAUloN3Y7zCobXRk4Dv/nQic4vQ="
+  restapikey: ${bootpay.restapikey}
+  privatekey: ${bootpay.privatekey}
