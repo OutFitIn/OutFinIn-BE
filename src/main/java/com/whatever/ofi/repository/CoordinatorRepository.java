@@ -33,8 +33,8 @@ public class CoordinatorRepository {
 
     public Long findId(String email) {
         return em.createQuery(
-                "select c.id from Coordinator c " +
-                        "where c.email = :email", Long.class)
+                        "select c.id from Coordinator c " +
+                                "where c.email = :email", Long.class)
                 .setParameter("email", email)
                 .getSingleResult();
     }
@@ -53,10 +53,10 @@ public class CoordinatorRepository {
 
     public CoordinatorMyPageRes findMyPage(Long id) {
         Object[] result = em.createQuery(
-                "select c.nickname, c.sns_url, c.image_url, c.content, " +
-                        " c.height, c.weight, c.total_like, c.request_count, c.styles " +
-                        " from Coordinator c " +
-                        " where c.id = :id", Object[].class)
+                        "select c.nickname, c.sns_url, c.image_url, c.content, " +
+                                " c.height, c.weight, c.total_like, c.request_count, c.styles " +
+                                " from Coordinator c " +
+                                " where c.id = :id", Object[].class)
                 .setParameter("id", id)
                 .getSingleResult();
 
@@ -75,8 +75,8 @@ public class CoordinatorRepository {
 
     public List<CoordinatorAllBoardRes> findAllBoard(Long id) {
         List<Object[]> resultList = em.createQuery(
-                "select b.id, b.title, b.image_url from Board b " +
-                        "where b.coordinator.id = :id ", Object[].class)
+                        "select b.id, b.title, b.image_url from Board b " +
+                                "where b.coordinator.id = :id ", Object[].class)
                 .setParameter("id", id)
                 .getResultList();
 
@@ -92,9 +92,9 @@ public class CoordinatorRepository {
 
     public CoordinatorInfoRes findInfo(Long id) {
         Object[] result =  em.createQuery(
-                " select c.nickname, c.sns_url, c.image_url, c.content, c.gender, c.height, c.weight,c.styles " +
-                        " from Coordinator c " +
-                        " where c.id = :id", Object[].class)
+                        " select c.nickname, c.sns_url, c.image_url, c.content, c.gender, c.height, c.weight,c.styles " +
+                                " from Coordinator c " +
+                                " where c.id = :id", Object[].class)
                 .setParameter("id", id)
                 .getSingleResult();
 

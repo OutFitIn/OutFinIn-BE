@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity
 @ToString
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSocialLogin {
     @Id
@@ -19,13 +18,9 @@ public class UserSocialLogin {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //@Column(name = "kakaoid", unique = true)
     private String kakaoid;
-    //@Column(name = "naverid", unique = true)
     private String naverid;
-    //@Column(name = "googleid", unique = true)
     private String googleid;
-
 
     @Builder
     public UserSocialLogin (User user, String kakaoid, String naverid, String googleid){

@@ -81,6 +81,9 @@ public class UserService {
         return userRepository.findBoardLikeById(id);
     }
 
+    public String findNickname(Long id) {
+        return userRepository.findOne(id).getNickname();
+    }
     @Transactional
     public String editProfile(UserEditRequest dto, Long userId) {
         User user = userRepository.findOne(userId);

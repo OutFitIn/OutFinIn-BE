@@ -46,13 +46,15 @@ public class ChatHistory {
 
 
     public static ChatHistory create(ChatRoom chatRoom, User sender, Coordinator send, String message, LocalDateTime createdAt) {
+        ChatHistory chatHistory = null;
         if(sender == null){
-            ChatHistory chatHistory = new ChatHistory(chatRoom, null ,send, message, createdAt);
+            chatHistory = new ChatHistory(chatRoom, null ,send, message, createdAt);
             chatRoom.getHistories().add(chatHistory);
             return chatHistory;
+        }else {
+            chatHistory = new ChatHistory(chatRoom, sender, null, message, createdAt);
+            chatRoom.getHistories().add(chatHistory);
         }
-        ChatHistory chatHistory = new ChatHistory(chatRoom, sender, null ,message, createdAt);
-        chatRoom.getHistories().add(chatHistory);
         return chatHistory;
     }
 }

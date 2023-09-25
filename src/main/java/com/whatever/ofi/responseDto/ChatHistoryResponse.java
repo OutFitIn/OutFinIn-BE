@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class ChatHistoryResponse {
-    private Long senderId;
+    private String senderId;
     private String message;
     private LocalDateTime createdAt;
 
-    public ChatHistoryResponse(Long senderId, String message, LocalDateTime createdAt) {
+    public ChatHistoryResponse(String senderId, String message, LocalDateTime createdAt) {
         this.senderId = senderId;
         this.message = message;
         this.createdAt = createdAt;
@@ -23,8 +23,9 @@ public class ChatHistoryResponse {
 
 
     public static ChatHistoryResponse of(ChatHistory chatHistory) {
+        String senderNickname = chatHistory.getSender() != null ? chatHistory.getSender().getNickname() : chatHistory.getSend().getNickname();
         return new ChatHistoryResponse(
-                chatHistory.getSender().getId(),
+                senderNickname,
                 chatHistory.getMessage(),
                 chatHistory.getCreatedAt()
         );

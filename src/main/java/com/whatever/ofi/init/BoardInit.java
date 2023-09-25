@@ -17,35 +17,35 @@ public class BoardInit {
 
     @PostConstruct
     public void boardInit() {
-        BoardRequest dto1 = new BoardRequest(1L, "힙합", 12, "가을",
-                "일상", "가을 코디입니다~", "test1.jpg", "선선한 가을 코디 한방에 정리~");
+        BoardRequest dto1 = new BoardRequest(1L, "힙합", 12, "가을 코디",
+                "일상", "가을 코디입니다~", "이소윤2.jpg", "선선한 가을 코디 한방에 정리~");
 
-        BoardRequest dto2 = new BoardRequest(1L, "로맨틱", 8, "봄",
-                "데이트", "봄날의 데이트룩~", "test2.jpg", "산듯한 봄 코디 한방에 정리~");
+        BoardRequest dto2 = new BoardRequest(1L, "미니멀", 8, "봄 코디",
+                "데이트", "봄날의 데이트룩~", "이소윤1.jpg", "산듯한 봄 코디 한방에 정리~");
 
-        BoardRequest dto3 = new BoardRequest(2L, "클래식", 6, "겨울",
-                "일상", "겨울의 클래식 스타일~", "test3.jpg", "추운 겨울 코디 한방에 정리~");
+        BoardRequest dto3 = new BoardRequest(2L, "힙합", 6, "겨울 코디",
+                "일상", "겨울의 클래식 스타일~", "오현식1.jpg", "추운 겨울 코디 한방에 정리~");
 
-        BoardRequest dto4 = new BoardRequest(2L, "스트릿", 15, "여름",
-                "스트릿패션", "여름에 어울리는 스트릿룩~", "test4.jpg", "핫한 여름 코디 한방에 정리~");
+        BoardRequest dto4 = new BoardRequest(2L, "스트릿", 15, "여름 코디",
+                "캠퍼스", "여름에 어울리는 스트릿룩~", "오현식2.jpg", "핫한 여름 코디 한방에 정리~");
 
-        BoardRequest dto5 = new BoardRequest(3L, "캐주얼", 10, "봄",
-                "일상", "봄의 캐주얼 스타일~", "test5.jpg", "산듯한 봄 코디 한방에 정리~");
+        BoardRequest dto5 = new BoardRequest(3L, "이지캐주얼", 10, "봄 코디",
+                "일상", "봄의 캐주얼 스타일~", "이수정1.jpg", "산듯한 봄 코디 한방에 정리~");
 
-        BoardRequest dto6 = new BoardRequest(3L, "러블리", 9, "가을",
-                "일상", "가을의 러블리 스타일~", "test6.jpg", "선선한 가을 코디 한방에 정리~");
+        BoardRequest dto6 = new BoardRequest(3L, "러블리", 9, "가을 코디",
+                "일상", "가을의 러블리 스타일~", "이수정2.jpg", "선선한 가을 코디 한방에 정리~");
 
-        BoardRequest dto7 = new BoardRequest(4L, "모던", 7, "겨울",
-                "일상", "겨울의 모던 스타일~", "test7.jpg", "추운 겨울 코디 한방에 정리~");
+        BoardRequest dto7 = new BoardRequest(4L, "시티보이", 7, "겨울 코디",
+                "여행", "겨울의 모던 스타일~", "김규민1.jpg", "추운 겨울 코디 한방에 정리~");
 
-        BoardRequest dto8 = new BoardRequest(4L, "헌팅", 11, "여름",
-                "헌팅패션", "여름에 어울리는 헌팅룩~", "test8.jpg", "핫한 여름 코디 한방에 정리~");
+        BoardRequest dto8 = new BoardRequest(4L, "올드머니", 11, "여름 코디",
+                "여행", "여름에 어울리는 헌팅룩~", "김규민2.jpg", "핫한 여름 코디 한방에 정리~");
 
-        BoardRequest dto9 = new BoardRequest(5L, "아메카지", 14, "봄",
-                "일상", "봄의 아메카지 스타일~", "test9.jpg", "산듯한 봄 코디 한방에 정리~");
+        BoardRequest dto9 = new BoardRequest(5L, "아메카지", 14, "봄 코디",
+                "면접", "봄의 아메카지 스타일~", "하이디라오1.jpg", "산듯한 봄 코디 한방에 정리~");
 
-        BoardRequest dto10 = new BoardRequest(5L, "플로럴", 13, "가을",
-                "일상", "가을의 플로럴 스타일~", "test10.jpg", "선선한 가을 코디 한방에 정리~");
+        BoardRequest dto10 = new BoardRequest(5L, "시티보이", 13, "가을 코디",
+                "결혼식", "가을의 플로럴 스타일~", "하이디라오2.jpg", "선선한 가을 코디 한방에 정리~");
 
         boardService.join(dto1, 1L);
         boardService.join(dto2, 1L);

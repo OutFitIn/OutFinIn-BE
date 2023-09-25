@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
@@ -81,5 +81,5 @@ jwt:
   secret: ${jwt_secret}
 
 bootpay:
-  restapikey: "64ec910100c78a001abf689d"
-  privatekey: "oEP/4NY+MpUakTqjQAUloN3Y7zCobXRk4Dv/nQic4vQ="
+  restapikey: "651149f2e57a7e001dc68830"
+  privatekey: "YulwTrn56ggMI3oGXqdyyByynFjfB21ciVOdPy6Q14w="

@@ -12,11 +12,9 @@ import com.whatever.ofi.domain.Coordinator;
 import com.whatever.ofi.domain.CoordinatorSocialLogin;
 import com.whatever.ofi.domain.User;
 import com.whatever.ofi.domain.UserSocialLogin;
-import com.whatever.ofi.repository.CoordinatorRepository;
-import com.whatever.ofi.repository.CoordinatorSocialLoginRepository;
-import com.whatever.ofi.repository.UserRepository;
-import com.whatever.ofi.repository.UserSocialLoginRepository;
+import com.whatever.ofi.repository.*;
 import com.whatever.ofi.requestDto.CoordinatorSocialRequest;
+import com.whatever.ofi.requestDto.TypeId;
 import com.whatever.ofi.requestDto.UserSocialRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -90,35 +87,45 @@ public class SocialLoginService {
         return googleid;
     }
 
-    public Map<Long, String> socialLogin (String social, String socailId) {
-        Map<Long, String> CoLogin;
-        Map<Long, String> UserLogin;
+    public TypeId socialLogin (String social, String socailId) {
+        TypeId CoLogin = null;
+        TypeId UserLogin = null;
 
         if (social.equals("Naver")) {
+            System.out.println("네이버 입장");
             CoLogin = coordinatorSocialLoginRepository.findUserIdByNaverId(socailId);
             UserLogin = userSocialLoginRepository.findUserIdByNaverId(socailId);
 
-            if (CoLogin.isEmpty() && UserLogin.isEmpty()) { return CoLogin; }
-            else if(CoLogin.isEmpty()) { return UserLogin; }
-            else { return CoLogin; }
+            if (CoLogin == null && UserLogin == null) { System.out.println("1"); return CoLogin; }
+            else if(CoLogin == null) {
+                System.out.println("2");
+                System.out.println("소셜로그인: " + UserLogin.toString());
+                return UserLogin;
+            }
+            else { System.out.println("3"); return CoLogin; }
         }
 
         else if (social.equals("Kakao")) {
+            System.out.println("카카오 입장");
             CoLogin = coordinatorSocialLoginRepository.findUserIdByKakaoId(socailId);
             UserLogin = userSocialLoginRepository.findUserIdByKakaoId(socailId);
 
-            if (CoLogin.isEmpty() && UserLogin.isEmpty()) { return CoLogin; }
-            else if(CoLogin.isEmpty()) { return UserLogin; }
-            else { return CoLogin; }
+            if (CoLogin == null && UserLogin == null) { System.out.println("1"); return CoLogin; }
+            else if(CoLogin == null) {
+                System.out.println("2");
+                return UserLogin;
+            }
+            else { System.out.println("3"); return CoLogin; }
         }
 
         else if (social.equals("Google")) {
+            System.out.println("구글 입장");
             CoLogin = coordinatorSocialLoginRepository.findUserIdByGoogleId(socailId);
             UserLogin = userSocialLoginRepository.findUserIdByGoogleId(socailId);
 
-            if (CoLogin.isEmpty() && UserLogin.isEmpty()) { return CoLogin; }
-            else if(CoLogin.isEmpty()) { return UserLogin; }
-            else { return CoLogin; }
+            if (CoLogin == null && UserLogin == null) { System.out.println("1"); return CoLogin; }
+            else if(CoLogin == null) { System.out.println("2"); return UserLogin; }
+            else { System.out.println("3"); return CoLogin; }
         }
 
         else return null;
@@ -127,7 +134,7 @@ public class SocialLoginService {
     public String login(Long id, String type) {
         String nickname = "";
         if (type.equals("coordinator")) {
-           nickname = coordinatorRepository.findOne(id).getNickname();
+            nickname = coordinatorRepository.findOne(id).getNickname();
         } else if (type.equals("user")) {
             nickname = userRepository.findOne(id).getNickname();
         }
@@ -149,7 +156,6 @@ public class SocialLoginService {
                 co.setKakaoid(kakaoId);
                 coordinatorSocialLoginRepository.save(co.toEntity());
             } else {
-                so.get(0).setKakaoid(kakaoId);
                 coordinatorSocialLoginRepository.insertKakaoid(kakaoId, coordinator);
             }
 
@@ -170,7 +176,6 @@ public class SocialLoginService {
                 userSocialRequest.setKakaoid(kakaoId);
                 userSocialLoginRepository.save(userSocialRequest.toEntity());
             } else {
-                so.get(0).setKakaoid(kakaoId);
                 userSocialLoginRepository.insertKakaoid(kakaoId, user);
             }
 
@@ -192,7 +197,6 @@ public class SocialLoginService {
                 co.setNaverid(naverId);
                 coordinatorSocialLoginRepository.save(co.toEntity());
             } else {
-                so.get(0).setNaverid(naverId);
                 coordinatorSocialLoginRepository.insertNaverid(naverId, coordinator);
             }
 
@@ -213,7 +217,6 @@ public class SocialLoginService {
                 userSocialRequest.setNaverid(naverId);
                 userSocialLoginRepository.save(userSocialRequest.toEntity());
             } else {
-                so.get(0).setNaverid(naverId);
                 userSocialLoginRepository.insertNaverid(naverId, user);
             }
 
@@ -235,7 +238,6 @@ public class SocialLoginService {
                 co.setGoogleid(googleId);
                 coordinatorSocialLoginRepository.save(co.toEntity());
             } else {
-                so.get(0).setGoogleid(googleId);
                 coordinatorSocialLoginRepository.insertGoogleid(googleId, coordinator);
             }
 
@@ -250,7 +252,6 @@ public class SocialLoginService {
                 userSocialRequest.setGoogleid(googleId);
                 userSocialLoginRepository.save(userSocialRequest.toEntity());
             } else {
-                so.get(0).setGoogleid(googleId);
                 userSocialLoginRepository.insertGoogleid(googleId, user);
             }
 

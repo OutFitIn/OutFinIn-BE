@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://1.233.127.245/"}, allowCredentials = "true")
+@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://localhost:3000"}, allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
@@ -103,5 +103,10 @@ public class UserController {
     @PostMapping("/edit")
     public String editProfile(@RequestBody UserEditRequest dto, HttpSession session) {
         return userService.editProfile(dto, (Long) session.getAttribute("id"));
+    }
+
+    @GetMapping("/nickname")
+    public String nickname(HttpSession session) {
+        return userService.findNickname((Long) session.getAttribute("id"));
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/chat")
-@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://1.233.127.245/"}, allowCredentials = "true")
+@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://localhost:3000"}, allowCredentials = "true")
 public class ChatRoomController {
     @Value("${jwt.secret}")
     private String secretKey;

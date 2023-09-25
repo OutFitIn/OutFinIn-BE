@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth/register")
-@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://1.233.127.245/"}, allowCredentials = "true")
+@CrossOrigin(origins = {"https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/", "http://localhost:3000"}, allowCredentials = "true")
 public class SocialLoginController {
 
     private final SocialLoginService socialLoginService;
@@ -58,7 +58,7 @@ public class SocialLoginController {
 
         return id.toString() + " " + type;
     }
-
+/*
     @PostMapping("/google")
     public String RegisterGoogle(@RequestBody String code, @RequestHeader("Authorization") String token) {
         System.out.println("Google Token:" + token);
@@ -91,5 +91,5 @@ public class SocialLoginController {
         String GoogleId = socialLoginService.getGoogleId(temp);
 
         return GoogleId;
-    }
+    }*/
 }

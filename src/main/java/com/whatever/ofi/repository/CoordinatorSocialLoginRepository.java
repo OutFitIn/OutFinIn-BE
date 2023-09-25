@@ -4,6 +4,7 @@ import com.whatever.ofi.domain.Coordinator;
 import com.whatever.ofi.domain.CoordinatorSocialLogin;
 import com.whatever.ofi.domain.User;
 import com.whatever.ofi.domain.UserSocialLogin;
+import com.whatever.ofi.requestDto.TypeId;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -32,51 +33,54 @@ public class CoordinatorSocialLoginRepository {
     }
 
     // googleid로 userid, type 찾기
-    public Map<Long, String> findUserIdByGoogleId(String googleid) {
+    public TypeId findUserIdByGoogleId(String googleid) {
         List<Coordinator> resultList = em.createQuery(
                         "select c.coordinator from CoordinatorSocialLogin c " +
                                 "where c.googleid = :googleid", Coordinator.class)
                 .setParameter("googleid", googleid)
                 .getResultList();
 
-        Map<Long, String> resultMap = new HashMap<>();
-        if(resultList.isEmpty()) return resultMap;
+        System.out.println(resultList.get(0).getId() + " " + "coodinator");
 
-        resultMap.put(resultList.get(0).getId(), "coordinator");
+        TypeId temp = new TypeId();
+        temp.setId(resultList.get(0).getId());
+        temp.setType("coodinator");
 
-        return resultMap;
+        return temp;
     }
 
     // naverid로 userid, type 찾기
-    public Map<Long, String> findUserIdByNaverId(String naverid) {
+    public TypeId findUserIdByNaverId(String naverid) {
         List<Coordinator> resultList = em.createQuery(
                         "select c.coordinator from CoordinatorSocialLogin c " +
                                 "where c.naverid = :naverid", Coordinator.class)
                 .setParameter("naverid", naverid)
                 .getResultList();
 
-        Map<Long, String> resultMap = new HashMap<>();
-        if(resultList.isEmpty()) return resultMap;
+        System.out.println(resultList.get(0).getId() + " " + "coodinator");
 
-        resultMap.put(resultList.get(0).getId(), "coordinator");
+        TypeId temp = new TypeId();
+        temp.setId(resultList.get(0).getId());
+        temp.setType("coodinator");
 
-        return resultMap;
+        return temp;
     }
 
     // kakaoid로 userid, type 찾기
-    public Map<Long, String> findUserIdByKakaoId(String kakaoid) {
+    public TypeId findUserIdByKakaoId(String kakaoid) {
         List<Coordinator> resultList = em.createQuery(
                         "select c.coordinator from CoordinatorSocialLogin c " +
                                 "where c.kakaoid = :kakaoid", Coordinator.class)
                 .setParameter("kakaoid", kakaoid)
                 .getResultList();
 
-        Map<Long, String> resultMap = new HashMap<>();
-        if(resultList.isEmpty()) return resultMap;
+        System.out.println(resultList.get(0).getId() + " " + "coodinator");
 
-        resultMap.put(resultList.get(0).getId(), "coordinator");
+        TypeId temp = new TypeId();
+        temp.setId(resultList.get(0).getId());
+        temp.setType("coodinator");
 
-        return resultMap;
+        return temp;
     }
 
     public void insertKakaoid(String kakaoid, Coordinator coordinator) {

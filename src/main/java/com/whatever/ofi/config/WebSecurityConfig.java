@@ -72,6 +72,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.addAllowedOrigin("https://web-frontend-iciy2almolkc88.sel5.cloudtype.app/");
+        configuration.addAllowedOrigin("http://localhost:3000/");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
