@@ -90,6 +90,6 @@ server:
       cookie:
         same-site: none
         secure: true
-        domain: cloudtype.app
+        domain: localhost:3000
         http-only: true
         path: /

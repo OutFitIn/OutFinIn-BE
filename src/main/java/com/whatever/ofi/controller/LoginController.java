@@ -78,7 +78,10 @@ public class LoginController {
     public String KakaoLogin (@RequestBody String code ,HttpSession session) {
         if (code == null) return "false";
 
-        String kakaoId = socialLoginService.getKakaoId(code);
+        String temp = code.substring(0, code.length() - 1);
+        System.out.println("code: " + temp);
+
+        String kakaoId = socialLoginService.getKakaoId(temp);
         TypeId typeId = userSocialLoginRepository.findUserIdByKakaoId(kakaoId);
 
         if (typeId == null) return "false";
@@ -100,6 +103,7 @@ public class LoginController {
         cookie.setSecure(false);
         cookie.setMaxAge(86400); // 1일
         cookie.setHttpOnly(false);
+        cookie.setDomain(".cloudtype.app");
 
         System.out.println(cookie.getValue());
 
@@ -141,6 +145,7 @@ public class LoginController {
         cookie.setSecure(false);
         cookie.setMaxAge(86400); // 1일
         cookie.setHttpOnly(false);
+        cookie.setDomain(".cloudtype.app");
 
         System.out.println(cookie.getValue());
 
