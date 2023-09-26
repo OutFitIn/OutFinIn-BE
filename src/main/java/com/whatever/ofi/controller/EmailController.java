@@ -27,7 +27,7 @@ public class EmailController {
     private final EmailAuthService emailAuthService;
 
     @GetMapping("/send")
-    public String mailConfirm(@RequestParam String email, HttpSession session) throws Exception {
+    public String mailConfirm(@RequestParam String email) throws Exception {
         boolean pass = checkService.availableEmail(email);
 
         if(!pass) {
@@ -38,15 +38,6 @@ public class EmailController {
         System.out.println("인증코드 : " + code);
 
         emailAuthService.saveDataWithExpiration(email, code, 300);
-        Cookie sessionId = new Cookie("JSESSIONID", session.getId());
-        sessionId.setDomain(".sel5.cloudtype.app");
-        sessionId.setPath("/");
-        sessionId.setSecure(false);
-        sessionId.setMaxAge(86400); // 1일
-        sessionId.setHttpOnly(false);
-
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-        response.addCookie(sessionId);
 
         return code;
     }
