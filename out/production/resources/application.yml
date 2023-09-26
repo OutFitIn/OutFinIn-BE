@@ -1,19 +1,9 @@
 spring:
   datasource:
-    url: ${mariaDB_URL}
+    url: jdbc:mariadb://svc.sel5.cloudtype.app:32002/ofi
     driver-class-name: org.mariadb.jdbc.Driver
-    username: ${mariaDB_username}
-    password: ${mariaDB_password}
-
-server:
-  servlet:
-    session:
-      cookie:
-        same-site: none
-        secure: true
-        domain: cloudtype.app
-        http-only: true
-        path: /
+    username: root
+    password: aksl4224
 
   jpa:
     hibernate:
@@ -25,8 +15,8 @@ server:
   mail:
     host: smtp.naver.com
     port: 465
-    username: ${naver_username}
-    password: ${naver_password}
+    username: ofi1234@naver.com
+    password: aksl4224!
     properties:
       debug: false
       mail:
@@ -60,7 +50,7 @@ server:
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
           google:
-            client-id: 913247934733-5ubt084h8ohcpngodtvcmvmu4ucn0rtd.apps.googleusercontent.com
+            client-id: "913247934733-5ubt084h8ohcpngodtvcmvmu4ucn0rtd.apps.googleusercontent.com"
             client-secret: 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
             redirect-uri: http://localhost:3000/oauth/google
             scope: profile,email
@@ -88,8 +78,18 @@ decorator:
       enable-logging: true
 
 jwt:
-  secret: ${jwt_secret}
+  secret: GDGWHATEVEROFI
 
 bootpay:
   restapikey: "651149f2e57a7e001dc68830"
   privatekey: "YulwTrn56ggMI3oGXqdyyByynFjfB21ciVOdPy6Q14w="
+
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
+        domain: cloudtype.app
+        http-only: true
+        path: /
