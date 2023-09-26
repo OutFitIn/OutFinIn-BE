@@ -5,6 +5,16 @@ spring:
     username: ${mariaDB_username}
     password: ${mariaDB_password}
 
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
+        domain: cloudtype.app
+        http-only: true
+        path: /
+
   jpa:
     hibernate:
       ddl-auto: create-drop
